@@ -3,6 +3,7 @@ import 'package:cherry_toast/cherry_toast_icon.dart';
 import 'package:cherry_toast/resources/arrays.dart';
 import 'package:cherry_toast/resources/colors.dart';
 import 'package:cherry_toast/resources/constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -285,7 +286,9 @@ class _CherryToastState extends State<CherryToast>
       Timer(widget.toastDuration, () {
         slideController.reverse();
         Timer(widget.animationDuration, () {
-          Navigator.pop(context);
+          if (mounted) {
+            Navigator.pop(context);
+          }
         });
       });
     }
@@ -497,9 +500,7 @@ class _CherryToastState extends State<CherryToast>
               ? CrossAxisAlignment.start
               : CrossAxisAlignment.end,
           children: [
-            widget.displayTitle
-                ? widget.title
-                : Container(),
+            widget.displayTitle ? widget.title : Container(),
             widget.description == null
                 ? Container()
                 : Column(
@@ -518,6 +519,9 @@ class _CherryToastState extends State<CherryToast>
                       ),
                       InkWell(
                         onTap: () {
+                          if (widget.autoDismiss) {
+                            Navigator.of(context).pop();
+                          }
                           widget.actionHandler?.call();
                         },
                         child: widget.action,
